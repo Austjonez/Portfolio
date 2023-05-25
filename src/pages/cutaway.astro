@@ -1,0 +1,47 @@
+---
+import Layout from '../layouts/Layout.astro'
+---
+
+<Layout title="Pixel Beach">
+	<main class="bg-gray-100 w-full rounded-3xl shadow-2xl p-10">
+		<figure class="illustration grid h-80 place-items-center">
+			<section class="box relative grid place-items-center">
+				<div class="side-2 absolute h-40 w-40 border-emerald-900 border-2"></div>
+				<div class="side-3 absolute h-40 w-40 border-orange-800 border-2"></div>
+				<div class="side-4 absolute h-40 w-40 border-yellow-500 border-2"></div>
+				<div class="side-5 absolute h-40 w-40 border-blue-600 border-2"></div>
+			</section>
+		</figure>
+	</main>
+</Layout>
+
+<style lang="scss" scoped>
+	.illustration {
+		perspective: 320px;
+	}
+	.box {
+		animation: rotate 5000ms linear infinite;
+		transform-style: preserve-3d;
+	}
+	.side-2 {
+		transform: translateX(-35.2%) rotateY(-45deg);
+		transform-style: preserve-3d;
+	}
+	.side-3 {
+		transform: translateX(35.2%) rotateY(45deg);
+		transform-style: preserve-3d;
+	}
+	.side-4 {
+		transform: translateX(35.2%) translateZ(-110px) rotateY(-45deg);
+		transform-style: preserve-3d;
+	}
+	.side-5 {
+		transform: translateX(-35.2%) translateZ(-110px) rotateY(45deg);
+		transform-style: preserve-3d;
+	}
+
+	@keyframes rotate {
+		from {transform: rotateY(0deg);}
+		to {transform: rotateY(360deg);}
+	}
+</style>
