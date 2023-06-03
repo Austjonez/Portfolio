@@ -19,6 +19,20 @@ import Layout from '../layouts/Layout.astro'
 					<div class="left box-face"></div>
 					<div class="top box-face"></div>
 				</div>
+				<div class="box-sm layer-2">
+					<div class="front box-face"></div>
+					<div class="right box-face"></div>
+					<div class="back box-face"></div>
+					<div class="left box-face"></div>
+					<div class="top box-face"></div>
+				</div>
+				<div class="box-sm layer-3">
+					<div class="front box-face"></div>
+					<div class="right box-face"></div>
+					<div class="back box-face"></div>
+					<div class="left box-face"></div>
+					<div class="top box-face"></div>
+				</div>
 			</section>
 		</figure>
 	</main>
@@ -31,7 +45,9 @@ import Layout from '../layouts/Layout.astro'
 		--origin-z-offset: calc((var(--size)/-2) + var(--z-offset));
 
 		--size: clamp(150px, 18vw, 200px);
-		--layer-1: calc(var(--size)/4);
+		--layer-1: calc(var(--size)/8);
+		--layer-2: calc(var(--size)/8);
+		--layer-3: calc(var(--size)/8);
 	}
 	main {
 		padding-top: calc(var(--y-offset)*-1px);
@@ -63,16 +79,61 @@ import Layout from '../layouts/Layout.astro'
 			filter: blur(calc((var(--y-offset)*1px)/-10));
 		}
 		&-sm {
+			position: absolute;
 			width: var(--size);
 			transform-style: preserve-3d;
 			cursor: pointer;
 			pointer-events: all;
-			transition: all 800ms;
+			transition-duration: 800ms;
+			--layer-3-cut-left: 
+				0% calc(var(--slope-offset) - var(--layer-3)), 
+				10% calc(var(--slope-offset) - var(--layer-3)), 
+				20% calc(((var(--slope-offset) - var(--layer-3))/3)*2),
+				60% calc((var(--slope-offset) - var(--layer-3))/3),
+				80% 0%, 
+				100% 0%;
+			--layer-3-cut-right:
+				100% calc(var(--slope-offset) - var(--layer-3)), 
+				90% calc(var(--slope-offset) - var(--layer-3)), 
+				80% calc(((var(--slope-offset) - var(--layer-3))/3)*2),
+				40% calc((var(--slope-offset) - var(--layer-3))/3),
+				20% 0%, 
+				0% 0%;
 			&.layer {
 				&-1 {
-					position: relative;
-					margin-top: calc(var(--size) - var(--layer-1));
+					background: teal;
+					top: calc(var(--size) - var(--layer-1));
 					height: var(--layer-1);
+				}
+				&-2 {
+					background: pink;
+					top: calc(var(--size) - var(--layer-1) - var(--layer-2));
+					height: var(--layer-2);
+				}
+				&-3 {
+					--slope-offset: calc(var(--layer-3)*3);
+					background: gold;
+					top: calc(var(--size) - var(--layer-1) - var(--layer-2) - var(--layer-3));
+					height: var(--layer-3);
+					.back, .left, .right {
+						top:  calc((var(--slope-offset) - var(--layer-3))*-1);
+						height: var(--slope-offset);
+					}
+					.left {
+						clip-path: polygon(var(--layer-3-cut-left), 100% 100%, 0% 100%);
+						&::after {
+							content: '';
+							display: block;
+							height: 100%;
+							width: 100%;
+							background-color: aquamarine;
+							transform: scale(.95);
+							clip-path: polygon(var(--layer-3-cut-left), 100% 100%, 0% 100%);
+						}
+					}
+					.right {
+						clip-path: polygon(var(--layer-3-cut-right), 0% 100%, 100% 100%);
+					}
 				}
 			}
 			&:hover {
