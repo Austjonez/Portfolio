@@ -3,45 +3,114 @@ import Layout from '../layouts/Layout.astro'
 ---
 
 <Layout title="Pixel Beach">
-	<main class="bg-gray-100 w-full rounded-3xl shadow-2xl p-10">
-		<figure class="illustration grid h-80 place-items-center">
+	<main class="overflow-x-hidden">
+		<figure class="illustration grid place-items-center">
 			<section class="box relative grid place-items-center">
-				<div class="side-2 absolute h-40 w-40 border-emerald-900 border-2"></div>
-				<div class="side-3 absolute h-40 w-40 border-orange-800 border-2"></div>
-				<div class="side-4 absolute h-40 w-40 border-yellow-500 border-2"></div>
-				<div class="side-5 absolute h-40 w-40 border-blue-600 border-2"></div>
+				<div class="front box-face"></div>
+				<div class="right box-face"></div>
+				<div class="back box-face"></div>
+				<div class="left box-face"></div>
+				<div class="top box-face"></div>
+				
+				<div class="box-sm layer-1">
+					<div class="front box-face"></div>
+					<div class="right box-face"></div>
+					<div class="back box-face"></div>
+					<div class="left box-face"></div>
+					<div class="top box-face"></div>
+				</div>
 			</section>
 		</figure>
 	</main>
 </Layout>
 
 <style lang="scss" scoped>
+	:root {
+		--y-offset: -400;
+		--z-offset: -100px;
+		--origin-z-offset: calc((var(--size)/-2) + var(--z-offset));
+
+		--size: clamp(150px, 18vw, 200px);
+		--layer-1: calc(var(--size)/4);
+	}
+	main {
+		padding-top: calc(var(--y-offset)*-1px);
+		perspective: 1000px;
+		// background: linear-gradient(to bottom,#fff, #f4f2f0 calc(var(--y-offset)*-.2px), #fff calc((var(--y-offset)*-.2px) + 10px));
+	}
 	.illustration {
-		perspective: 320px;
+		height: calc((var(--y-offset)*-1px) + var(--size));
+		transform-style: preserve-3d;
+		transform: rotateX(-30deg);
+		pointer-events: none;
 	}
 	.box {
-		animation: rotate 5000ms linear infinite;
+		transform-origin: 50% 50% var(--origin-z-offset);
+		// animation: rotate 10000ms linear infinite;
+		transform: rotateY(45deg) translateZ(var(--z-offset)) translateY(calc(var(--y-offset)*1px));
+		transform-style: preserve-3d;
+		height: var(--size);
+		width: var(--size);
+		pointer-events: none;
+		&::after {
+			content: '';
+			display: block;
+			height: var(--size);
+			width: var(--size);
+			background: #332d27;
+			transform: translateZ(calc(var(--size)/-2)) translateY(calc((var(--size)/2) - (var(--y-offset)*1px) )) rotateX(90deg) scale(calc((var(--y-offset) / -500) + 1));
+			opacity: calc(1 - (var(--y-offset) / -800));
+			filter: blur(calc((var(--y-offset)*1px)/-10));
+		}
+		&-sm {
+			width: var(--size);
+			transform-style: preserve-3d;
+			cursor: pointer;
+			pointer-events: all;
+			transition: all 800ms;
+			&.layer {
+				&-1 {
+					position: relative;
+					margin-top: calc(var(--size) - var(--layer-1));
+					height: var(--layer-1);
+				}
+			}
+			&:hover {
+				transform: translateX(calc(var(--size)/-1.25));
+			}
+		}
+	}
+
+	.box-face {
+		border: 1px solid coral;
+		position: absolute;
+		height: 100%;
+		width: 100%;
+		box-shadow: inset 0 0 calc(var(--size)/10) #ced5e0;
+		border-color: none;
+	}
+	.front {
 		transform-style: preserve-3d;
 	}
-	.side-2 {
-		transform: translateX(-35.2%) rotateY(-45deg);
-		transform-style: preserve-3d;
+	.right {
+		transform-origin: right;
+		transform: rotateY(-90deg);
 	}
-	.side-3 {
-		transform: translateX(35.2%) rotateY(45deg);
-		transform-style: preserve-3d;
+	.back {
+		transform: translateZ(calc(var(--size)*-1));
 	}
-	.side-4 {
-		transform: translateX(35.2%) translateZ(-110px) rotateY(-45deg);
-		transform-style: preserve-3d;
+	.left {
+		transform-origin: left;
+		transform: rotateY(90deg);
 	}
-	.side-5 {
-		transform: translateX(-35.2%) translateZ(-110px) rotateY(45deg);
-		transform-style: preserve-3d;
+	.top {
+		height: var(--size);
+		transform-origin: top;
+		transform: rotateX(-90deg);
 	}
 
 	@keyframes rotate {
-		from {transform: rotateY(0deg);}
-		to {transform: rotateY(360deg);}
+		from {transform: rotateY(0deg) translateZ(var(--z-offset)) translateY(calc(var(--y-offset)*1px));}
+		to {transform: rotateY(360deg) translateZ(var(--z-offset)) translateY(calc(var(--y-offset)*1px));}
 	}
 </style>
